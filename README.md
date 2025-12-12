@@ -42,8 +42,4 @@ Admin dapat mengelola seluruh konten website melalui halaman dashboard:
 - Proteksi halaman admin (session login)  
 - Logout Admin  
 
----
-
-## Akun Admin (Default)
-Gunakan akun berikut untuk masuk ke dashboard admin:
 
