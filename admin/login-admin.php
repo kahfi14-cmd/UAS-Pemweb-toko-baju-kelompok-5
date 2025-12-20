@@ -45,12 +45,12 @@ if (isset($_POST['login'])) {
 
         /* Container Login Utama */
         .auth-box {
-            background: #fff; /* Kotak putih */
+            background: #fff; 
             padding: 30px;
-            border-radius: 5px; /* Sudut sedikit membulat */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bayangan standar */
+            border-radius: 5px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
             width: 100%;
-            max-width: 350px; /* Lebar umum untuk form login */
+            max-width: 350px; 
         }
 
         /* Judul */
@@ -78,21 +78,21 @@ if (isset($_POST['login'])) {
         .form-group input[type="password"] {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc; /* Border abu-abu netral */
+            border: 1px solid #ccc; 
             border-radius: 4px;
-            box-sizing: border-box; /* Penting agar padding tidak menambah lebar */
+            box-sizing: border-box; 
             font-size: 16px;
         }
 
         .form-group input:focus {
-            border-color: #48002bff; /* Hijau atau warna umum saat fokus */
+            border-color: #48002bff; 
             outline: none;
         }
 
         /* Tombol Login */
         .btn {
             width: 100%;
-            background-color: #06004eff; /* Warna hijau standar (sering dipakai untuk tombol aksi) */
+            background-color: #06004eff; 
             color: white;
             padding: 10px;
             border: none;
@@ -105,13 +105,13 @@ if (isset($_POST['login'])) {
         }
 
         .btn:hover {
-            background-color: #b80046ff; /* Sedikit lebih gelap saat hover */
+            background-color: #b80046ff; 
         }
 
         /* Pesan Error (Alert) */
         .alert-danger {
-            background-color: #f2dede; /* Merah muda sangat terang */
-            color: #a94442; /* Teks merah gelap */
+            background-color: #f2dede; 
+            color: #a94442; 
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ebccd1;
