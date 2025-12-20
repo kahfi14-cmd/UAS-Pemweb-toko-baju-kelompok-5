@@ -11,7 +11,7 @@ $result = $conn->query($query);
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Selamat Datang di Toko Baju</h1>
+            <h1>Selamat Datang di Kelompok 5 Store</h1>
             <p>Dapatkan koleksi baju terbaik dengan harga terjangkau</p>
             <a href="produk.php" class="btn">Belanja Sekarang</a>
         </div>
