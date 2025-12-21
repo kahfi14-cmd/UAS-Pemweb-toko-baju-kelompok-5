@@ -31,7 +31,7 @@ if (isset($_POST['login'])) {
 <html>
 <head>
     <title>Login Admin</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="stylesd.css">
     <style>
         body {
             font-family: Arial, sans-serif;

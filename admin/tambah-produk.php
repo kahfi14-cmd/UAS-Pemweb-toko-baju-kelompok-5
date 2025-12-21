@@ -10,7 +10,7 @@ $page_title = "Tambah Produk - Admin";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?></title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="stylesd.css">
     <style>
         .admin-nav {
             background-color: #34495e;
