@@ -3,7 +3,13 @@ include '../includes/config.php';
 include "protect-admin.php";
 $page_title = "Admin Dashboard - Toko Baju";
 
-// Ambil semua produk
+// Ambil statistik real dari database
+$total_produk = $conn->query("SELECT COUNT(*) as count FROM produk")->fetch_assoc()['count'];
+$total_penjualan = $conn->query("SELECT SUM(total) as sum FROM pesanan WHERE status IN ('paid','shipped','completed')")->fetch_assoc()['sum'] ?? 0;
+$pesanan_baru = $conn->query("SELECT COUNT(*) as count FROM pesanan WHERE status='pending'")->fetch_assoc()['count'];
+$stok_menipis = $conn->query("SELECT COUNT(*) as count FROM produk WHERE stok <= 5 AND stok > 0")->fetch_assoc()['count'];
+
+// Ambil semua produk untuk ditampilkan di tabel
 $query = "SELECT * FROM produk ORDER BY id DESC";
 $result = $conn->query($query);
 ?>
@@ -13,7 +19,7 @@ $result = $conn->query($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Kelompok 5 Store</title>
+    <title><?php echo $page_title; ?></title>
     <link rel="stylesheet" href="stylesd.css">
 </head>
 <body>
@@ -73,30 +79,30 @@ $result = $conn->query($query);
                 <!-- Stats Cards -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon">📦</div>
+                        <div class="stat-icon">P</div>
                         <div class="stat-label">Total Produk</div>
-                        <div class="stat-value">156</div>
-                        <div class="stat-change">+12% dari bulan lalu</div>
+                        <div class="stat-value"><?php echo $total_produk; ?></div>
+                        <div class="stat-change">Produk dalam sistem</div>
                     </div>
 
                     <div class="stat-card green">
-                        <div class="stat-icon">💰</div>
+                        <div class="stat-icon">X</div>
                         <div class="stat-label">Total Penjualan</div>
-                        <div class="stat-value">Rp 45.2M</div>
-                        <div class="stat-change">+23% dari bulan lalu</div>
+                        <div class="stat-value">Rp <?php echo number_format($total_penjualan / 1000000, 1); ?>M</div>
+                        <div class="stat-change">Total pendapatan</div>
                     </div>
 
                     <div class="stat-card orange">
-                        <div class="stat-icon">🛒</div>
-                        <div class="stat-label">Pesanan Baru</div>
-                        <div class="stat-value">28</div>
-                        <div class="stat-change">+5 hari ini</div>
+                        <div class="stat-icon">Z</div>
+                        <div class="stat-label">Pesanan Pending</div>
+                        <div class="stat-value"><?php echo $pesanan_baru; ?></div>
+                        <div class="stat-change">Menunggu konfirmasi</div>
                     </div>
 
                     <div class="stat-card red">
-                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-icon">T</div>
                         <div class="stat-label">Stok Menipis</div>
-                        <div class="stat-value">12</div>
+                        <div class="stat-value"><?php echo $stok_menipis; ?></div>
                         <div class="stat-change negative">Perlu restock</div>
                     </div>
                 </div>
@@ -106,11 +112,12 @@ $result = $conn->query($query);
                     <div class="table-header">
                         <h2>Daftar Produk</h2>
                         <div class="search-box">
-                            <input type="text" placeholder="Cari produk...">
+                            <input type="text" placeholder="Cari produk..." onkeyup="searchProducts(this.value)">
                         </div>
                     </div>
 
-                    <table class="admin-table">
+                    <?php if($result->num_rows > 0): ?>
+                    <table class="admin-table" id="productsTable">
                         <thead>
                             <tr>
                                 <th>Produk</th>
@@ -127,11 +134,11 @@ $result = $conn->query($query);
                                 <td>
                                     <div class="product-info">
                                         <?php if($row['gambar']): ?>
-                                            <img src="../images/produk/<?php echo $row['gambar']; ?>" alt="<?php echo $row['nama']; ?>" class="product-image">
+                                            <img src="../images/produk/<?php echo $row['gambar']; ?>" alt="<?php echo htmlspecialchars($row['nama']); ?>" class="product-image">
                                         <?php else: ?>
-                                            <div class="product-image"></div>
+                                            <div class="product-image" style="background: #e2e8f0;"></div>
                                         <?php endif; ?>
-                                        <span class="product-name"><?php echo $row['nama']; ?></span>
+                                        <span class="product-name"><?php echo htmlspecialchars($row['nama']); ?></span>
                                     </div>
                                 </td>
                                 <td>
@@ -171,9 +178,52 @@ $result = $conn->query($query);
                             <?php endwhile; ?>
                         </tbody>
                     </table>
+                    <?php else: ?>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <h3>Belum Ada Produk</h3>
+                        <p>Mulai tambahkan produk baru ke toko Anda</p>
+                        <a href="tambah-produk.php" class="btn-primary" style="margin-top: 20px;">+ Tambah Produk</a>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+        // Toggle Sidebar untuk Mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Search Products
+        function searchProducts(query) {
+            query = query.toLowerCase();
+            const rows = document.querySelectorAll('#productsTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if(text.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-toggle');
+            
+            if (window.innerWidth <= 1024) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
