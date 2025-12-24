@@ -2,7 +2,7 @@
 // Konfigurasi Database
 $host = "localhost";
 $user = "root";
-$password = ""; // Biarkan kosong jika default XAMPP
+$password = ""; 
 $database = "toko_baju";
 
 // Koneksi ke database
